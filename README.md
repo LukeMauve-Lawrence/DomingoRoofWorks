@@ -1,13 +1,13 @@
+<a name="top"/>
+
 # DomingoRoofWorks
+
 ##### Table of Contents  
 [Queries](#queries)   
 [Migration to Azure](#migration)  
 [Table Creates](#creates)  
 [Table Inserts](#inserts)  
  
-
-
-
 <a name="queries"/>
 
 ## Queries
@@ -17,6 +17,9 @@ SELECT J.*, E.Employee_No, E.First_Name, E.Last_Name
 FROM JOBCARD J, EMPLOYEE E, JOBCARD_EMPLOYEE JE
 WHERE (J.Job_Card_No = JE.Job_Card_No) AND (E.Employee_No = JE.Employee_No);
 ```
+
+![Picture1](https://user-images.githubusercontent.com/80064735/145680266-5a41c346-f478-4f4a-bc04-6b545f9dde48.png)
+
 
 ### Select the materials that have been used on job cards of type ‘Full Conversion’.
 ```
@@ -28,7 +31,10 @@ AND (JT.Job_Type = 'Full Conversion')
 ORDER BY J.Job_Card_No;
 ```
 
-### Write a query that selects all the job cards that Chris Byne has worked on.
+![Picture2](https://user-images.githubusercontent.com/80064735/145680321-24faf3bd-8425-4428-b713-5409c97dbff7.png)
+
+
+### Select all the job cards that Chris Byne has worked on.
 ```
 SELECT J.*, E.First_Name, E.Last_Name
 FROM JOBCARD J, JOBCARD_EMPLOYEE JE, EMPLOYEE E
@@ -36,7 +42,10 @@ WHERE (J.Job_Card_No = JE.Job_Card_No) AND (E.Employee_No = JE.Employee_No)
 AND (E.First_Name = 'Chris') AND (E.Last_Name = 'Byne');
 ```
 
-### Write a query that shows all job cards that have taken place in addresses that contain ‘0001’ or ‘0002’.
+![Picture3](https://user-images.githubusercontent.com/80064735/145680325-6d943918-24b6-4234-8ebd-97fe2babe3e7.png)
+
+
+### Select all job cards that have taken place in addresses that contain ‘0001’ or ‘0002’.
 ```
 SELECT J.*, A.*
 FROM JOBCARD J, CUSTOMER C, INVOICE I, ADDRESS_INFO A
@@ -45,7 +54,10 @@ AND (C.Address_ID = A.Address_ID) AND
 ((A.Postal_Code = '0002') OR (A.Postal_Code = '0001'));
 ```
 
-### Write a query that counts the number of jobs that have used electrical wiring.
+![Picture4](https://user-images.githubusercontent.com/80064735/145680334-430b5814-8de4-4649-8e9c-41dbd9c29540.png)
+
+
+### Count the number of jobs that have used electrical wiring.
 ```
 SELECT COUNT(M.Material_Name) "Number of jobs that have used electrical wiring."
 FROM JOBCARD J, MATERIAL M, MATERIALS_USED MU
@@ -53,9 +65,13 @@ WHERE (J.Job_Card_No = MU.Job_Card_No) AND (MU.Material_ID = M.Material_ID)
 AND (M.Material_Name = 'Metres of standard electrical wiring');
 ```
 
-### Write a query that produces the output that could be used to prepare an invoice. This should include a calculation for VAT charged on a job card (calculated at 14% of total cost of the job card).
+![Picture5](https://user-images.githubusercontent.com/80064735/145680339-4a53d0e9-4f40-4cfc-84f1-72d49213363e.png)
+
+
+### Produce the output that could be used to prepare an invoice. Including VAT.
 ```
-SELECT J.Job_Card_No, CONCAT(C.First_Name, ' ', C.Last_Name, ', ', A.City, ', ', A.Postal_Code, ', ', A.Street_Address, ', ',  A.Suburb) "Customer Details", JT.Job_Type,
+SELECT J.Job_Card_No, CONCAT(C.First_Name, ' ', C.Last_Name, ', ', A.City, ', ', A.Postal_Code, 
+', ', A.Street_Address, ', ',  A.Suburb) "Customer Details", JT.Job_Type,
 SUBSTRING(
         (
             SELECT ', '+ E.Employee_No + ' ' + E.First_Name + ' ' + E.Last_Name AS [text()]
@@ -73,12 +89,19 @@ SUBSTRING(
             FOR XML PATH ('')
         ), 2, 1000) [Equipment/Materials], 
 CONCAT('R', JT.Daily_Rate) "Daily Rate", J.No_of_Days, 
-CONCAT('R', (JT.Daily_Rate * J.No_of_Days)) "Subtotal", CONCAT('R', CAST(ROUND((((JT.Daily_Rate * J.No_of_Days) * 14) / 100), 2, 0) AS DECIMAL(18,2))) "VAT @14%", 
-CONCAT('R', ((JT.Daily_Rate * J.No_of_Days) + CAST(ROUND((((JT.Daily_Rate * J.No_of_Days) * 14) / 100), 2, 0) AS DECIMAL(18,2)))) "Total"
+CONCAT('R', (JT.Daily_Rate * J.No_of_Days)) "Subtotal", 
+CONCAT('R', CAST(ROUND((((JT.Daily_Rate * J.No_of_Days) * 14) / 100), 2, 0) AS DECIMAL(18,2))) "VAT @14%", 
+CONCAT('R', ((JT.Daily_Rate * J.No_of_Days) + CAST(ROUND((((JT.Daily_Rate * J.No_of_Days) * 14) / 100), 2, 0) 
+AS DECIMAL(18,2)))) "Total"
 FROM JOBCARD J, CUSTOMER C, ADDRESS_INFO A, JOB_TYPE JT,  ORDERS O, QUOTATION Q
-WHERE (A.Address_ID = C.Address_ID) AND (C.Customer_ID = Q.Customer_ID) AND (Q.Quotation_No = O.Quotation_No) AND (O.Job_Type_ID = JT.Job_Type_ID) AND (J.Orders_ID = O.Orders_ID)
+WHERE (A.Address_ID = C.Address_ID) AND (C.Customer_ID = Q.Customer_ID) AND (Q.Quotation_No = O.Quotation_No) 
+AND (O.Job_Type_ID = JT.Job_Type_ID) AND (J.Orders_ID = O.Orders_ID)
 ORDER BY J.Job_Card_No;
 ```
+
+![Picture6](https://user-images.githubusercontent.com/80064735/145680345-6e49ccce-c256-42a1-9db1-8b0aead6553e.png)
+![Picture7](https://user-images.githubusercontent.com/80064735/145680347-e0c08d06-90ff-4643-8e20-d802ff6c4d11.png)
+
 
 ### Update the daily rate of pay for a Full Conversion to R1 440.00.
 ```
@@ -86,14 +109,46 @@ UPDATE JOB_TYPE
 SET Daily_Rate = 1440
 WHERE (Job_Type = 'Full Conversion');
 ```
+![Picture8](https://user-images.githubusercontent.com/80064735/145680350-d97001fe-38d7-4a63-8931-b18107473426.png)
+![Picture9](https://user-images.githubusercontent.com/80064735/145680354-e743219c-f88b-4f2f-a725-53ef58ad3fe7.png)
+![Picture10](https://user-images.githubusercontent.com/80064735/145680357-dc55dd28-3f5d-452d-b95b-c02bd55409e7.png)
 
+[Back to Top](#top)  
 
 <a name="migration"/>
 
 ## Migration of the database to the Windows Azure Online Platform
-```
+### Step 1: create a server
+![Picture11](https://user-images.githubusercontent.com/80064735/145680677-a9233182-b267-46a8-a25c-278d7ecd5368.png)
 
-```
+
+### Step 2: Create the Database
+![Picture12](https://user-images.githubusercontent.com/80064735/145680723-214b2bc8-5f62-46fc-a2db-ffe002d4a692.png)
+
+![Picture13](https://user-images.githubusercontent.com/80064735/145680887-b2c78e2a-ff69-46f6-879c-9543c123a7a7.png)
+
+
+### Step 3: Wait for deployment of database
+![Picture14](https://user-images.githubusercontent.com/80064735/145680890-ac7339cf-000b-436f-9b8e-b991c5f5d42f.png)
+![Picture15](https://user-images.githubusercontent.com/80064735/145680892-410e26ee-1d2a-4c31-bdbc-6e076add9f7e.png)
+
+
+### Step 4: Allow home pc to access database through firewall
+![Picture16](https://user-images.githubusercontent.com/80064735/145680908-034d62a4-41b5-4d92-a4a3-d602791d705b.png)
+
+### Step 5: Connect to database through SQL Server Management Studio
+![Picture17](https://user-images.githubusercontent.com/80064735/145680914-6770d98a-cc96-47a0-a526-570077f1e80f.png)
+
+### Step 6: Generate scripts for table creates and inserts
+![Picture18](https://user-images.githubusercontent.com/80064735/145680916-c7d10461-d807-4054-9bb6-a21c72cdfefe.png)
+
+### Step 7: Run scripts in azure database
+![Picture19](https://user-images.githubusercontent.com/80064735/145680918-b5139d99-aa9d-41c7-a601-307fec97900a.png)
+
+### Step 8: Finished!
+![Picture20](https://user-images.githubusercontent.com/80064735/145680921-1b417c31-7d71-4554-8aa1-c132a0306b10.png)
+
+[Back to Top](#top)  
 
 <a name="creates"/>
  
@@ -231,6 +286,8 @@ CONSTRAINT FK_INVOICE_JOBCARD FOREIGN KEY (Job_Card_No) REFERENCES JOBCARD(Job_C
 CONSTRAINT FK_INVOICE_CUSTOMER FOREIGN KEY (Customer_ID) REFERENCES CUSTOMER(Customer_ID)
 );
 ```
+
+[Back to Top](#top)  
 
 <a name="inserts"/>
 
@@ -406,3 +463,5 @@ INSERT INTO INVOICE VALUES
 ('IN009', '13521', 'C009', 3240),
 ('IN010', '10102', 'C010', 1800);
 ```
+
+[Back to Top](#top)  
