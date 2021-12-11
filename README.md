@@ -5,6 +5,7 @@
 ##### Table of Contents  
 [Queries](#queries)   
 [Migration to Azure](#migration)  
+[ERD](#erd)  
 [Table Creates](#creates)  
 [Table Inserts](#inserts)  
  
@@ -147,6 +148,13 @@ WHERE (Job_Type = 'Full Conversion');
 
 ### Step 8: Finished!
 ![Picture20](https://user-images.githubusercontent.com/80064735/145680921-1b417c31-7d71-4554-8aa1-c132a0306b10.png)
+
+[Back to Top](#top)  
+
+<a name="erd"/>
+
+## ERD
+![ERD](https://user-images.githubusercontent.com/80064735/145681338-91c1fb9b-fe96-47a8-85b8-213b896d0bf7.png)
 
 [Back to Top](#top)  
 
