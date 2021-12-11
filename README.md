@@ -75,7 +75,8 @@ SELECT J.Job_Card_No, CONCAT(C.First_Name, ' ', C.Last_Name, ', ', A.City, ', ',
 ', ', A.Street_Address, ', ',  A.Suburb) "Customer Details", JT.Job_Type,
 SUBSTRING(
         (
-            SELECT ', '+ E.Employee_No + ' ' + E.First_Name + ' ' + E.Last_Name AS [text()]
+            SELECT ', '+ E.Employee_No + ' ' + E.First_Name + ' ' + E.Last_Name 
+            AS [text()]
             FROM EMPLOYEE E, JOBCARD_EMPLOYEE JE
             WHERE (E.Employee_No = JE.Employee_No) AND (JE.Job_Card_No = J.Job_Card_No)
             ORDER BY J.Job_Card_No
@@ -83,7 +84,8 @@ SUBSTRING(
         ), 2, 1000) [Employees Allocated], 
 SUBSTRING(
         (
-            SELECT ', '+ CAST(MU.Amount_Used AS VARCHAR)+' x '+ CAST(M.Material_Name AS VARCHAR)  AS [text()]
+            SELECT ', '+ CAST(MU.Amount_Used AS VARCHAR)+' x '+ CAST(M.Material_Name AS VARCHAR)  
+            AS [text()]
             FROM MATERIAL M, MATERIALS_USED MU
             WHERE (M.Material_ID = MU.Material_ID) AND (MU.Job_Card_No = J.Job_Card_No)
             ORDER BY J.Job_Card_No
